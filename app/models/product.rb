@@ -11,6 +11,9 @@ class Product < ApplicationRecord
   validates :image, presence: true
   has_one_attached :image
 
+  validates :status, presence: true
+  enum status: { available: 1, unavailable: 2 }
+
   has_many :product_categories, dependent: :destroy
   has_many :categories, through: :product_categories #through = através
   

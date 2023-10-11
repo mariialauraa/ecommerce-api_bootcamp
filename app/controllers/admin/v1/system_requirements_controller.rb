@@ -3,7 +3,9 @@ module Admin::V1
     before_action :load_system_requirement, only: [:update, :destroy]
 
     def index
-        @system_requirements = SystemRequirement.all
+      permitted = params.permit({ search: :name }, { order: {} }, :page, :length)   
+      @loading_service = Admin::ModelLoadingService.new(SystemRequirement.all, permitted)
+      @loading_service.call
     end
 
     def create
@@ -27,7 +29,7 @@ module Admin::V1
 
     def load_system_requirement
       @system_requirement = SystemRequirement.find(params[:id])
-    end
+    end    
 
     def system_requirement_params
       return {} unless params.has_key?(:system_requirement)

@@ -3,7 +3,10 @@ module Admin::V1
     before_action :load_user, only: [:update, :destroy]
 
     def index
-      @users = User.all
+      scope_without_current_user = User.where.not(id: @current_user.id)
+      permitted = params.permit({ search: :name }, { order: {} }, :page, :length)
+      @loading_service = Admin::ModelLoadingService.new(scope_without_current_user, permitted)
+      @loading_service.call
     end
 
     def create
