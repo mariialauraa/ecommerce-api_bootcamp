@@ -35,6 +35,6 @@ RSpec.describe Coupon, type: :model do
     expect(subject.errors.keys).to_not include :due_date #to_not verifica se nenhum erro foi adicionado ao atributo
   end
 
-  it_behaves_like "name searchable concern", :coupon
+  it_has_behavior_of "like searchable concern", :coupon, :name
   it_behaves_like "paginatable concern", :coupon
 end
