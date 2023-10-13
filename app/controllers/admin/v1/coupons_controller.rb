@@ -1,7 +1,7 @@
 module Admin::V1
   class CouponsController < ApiController
-    before_action :load_coupon, only: [:update, :destroy]
-
+    before_action :load_coupon, only: [:show, :update, :destroy]
+    
     def index
       permitted = params.permit({ search: :name }, { order: {} }, :page, :length)
       @loading_service = Admin::ModelLoadingService.new(Coupon.all, permitted)
@@ -11,15 +11,18 @@ module Admin::V1
     def create
       @coupon = Coupon.new
       @coupon.attributes = coupon_params
-      save_coupon! 
+      save_coupon!
     end
 
-    def update      
+
+    def show; end
+
+    def update
       @coupon.attributes = coupon_params
       save_coupon!
     end
 
-    def destroy      
+    def destroy
       @coupon.destroy!
     rescue
       render_error(fields: @coupon.errors.messages)

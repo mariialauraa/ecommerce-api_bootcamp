@@ -1,6 +1,6 @@
 module Admin::V1
   class UsersController < ApiController
-    before_action :load_user, only: [:update, :destroy]
+    before_action :load_user, only: [:show, :update, :destroy]
 
     def index
       scope_without_current_user = User.where.not(id: @current_user.id)
@@ -15,12 +15,14 @@ module Admin::V1
       save_user!
     end
 
-    def update      
+    def update
       @user.attributes = user_params
       save_user!
     end
 
-    def destroy      
+    def show; end
+
+    def destroy
       @user.destroy!
     rescue
       render_error(fields: @user.errors.messages)
