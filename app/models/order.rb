@@ -1,6 +1,11 @@
 class Order < ApplicationRecord
   DAYS_TO_DUE = 7 #constante
 
+  #atributos virtuais, não são salvos no Banco de Dados
+  attribute :address
+  attribute :card_hash
+  attribute :document
+
   belongs_to :user
   belongs_to :coupon, optional: true
   has_many :line_items
@@ -11,6 +16,15 @@ class Order < ApplicationRecord
   validates :payment_type, presence: true
   #números de vezes da parcela
   validates :installments, presence: true, numericality: { only_integer: true, greater_than: 0 }
+  validates :document, presence: true, cpf_cnpj: true, on: :create  
+
+  #validar a presença somente se o pagamento for com cartão de crédito
+  with_options if: ->{ credit_card? }, on: :create do
+    validates :card_hash, presence: true
+    validates :address, presence: true
+    #para evitar que um endereço incompleto seja passado no momento da geração de um pedido
+    validates_associated :address
+  end
 
   enum status: { processing_order: 1, processing_error: 2, waiting_payment: 3,
                  payment_accepted: 4, payment_denied: 5, finished: 6 }
