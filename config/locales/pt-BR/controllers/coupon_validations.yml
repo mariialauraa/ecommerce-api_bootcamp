@@ -1,0 +1,5 @@
+#mesma estrutura que chamamos no controller ('storefront/v1/coupon_validations.create.failure')
+pt-BR:
+  storefront/v1/coupon_validations:
+    create:
+      failure: Cupom não pode ser utilizado
