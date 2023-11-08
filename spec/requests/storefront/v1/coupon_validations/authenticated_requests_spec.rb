@@ -35,5 +35,21 @@ RSpec.describe "Storefront V1 Coupon Validation as authenticated user", type: :r
         expect(body_json['errors']['message']).to eq failure_message
       end
     end
+
+    #testes para enviar o código de cupom que não existe
+    context "when coupon does not exist" do
+      let(:url) { "/storefront/v1/coupons/aaa/validations" }
+
+      it 'returns unprocessable_entity status' do
+        post url, headers: auth_header(user)
+        expect(response).to have_http_status(:unprocessable_entity)
+      end
+
+      it 'returns valid Coupon' do
+        post url, headers: auth_header(user)
+        failure_message = I18n.t('storefront/v1/coupon_validations.create.failure')
+        expect(body_json['errors']['message']).to eq failure_message
+      end
+    end
   end
 end

@@ -6,7 +6,9 @@ module Storefront::V1
       @coupon = Coupon.find_by(code: params[:coupon_code])
       @coupon.validate_use!
       render :show
-    rescue
+      #o erro 'NoMethodError' é lançado quando tenta chamar um método que não existe
+      #qdo o cupom não existe, levanta a exceção 'NoMethodError'
+    rescue Coupon::InvalidUse, NoMethodError
       render_error(message: I18n.t('storefront/v1/coupon_validations.create.failure'))
     end
   
