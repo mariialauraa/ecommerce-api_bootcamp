@@ -20,7 +20,7 @@ describe Admin::AlocateLicensesService do
       expect(licenses_status).to eq ['in_use']
     end
 
-    #qdo enviar o email com a licensa muda o status para ':delivered status'
+    #qdo enviar o email com a licença muda o status para ':delivered status'
     it "line item receives :delivered status" do
       described_class.new(line_item).call
       #recarrega o 'LineItem'

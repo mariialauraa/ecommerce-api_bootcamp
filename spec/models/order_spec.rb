@@ -49,6 +49,28 @@ RSpec.describe Order, type: :model do
     expect(subject.status).to eq "processing_order"
   end
 
+  #verifica se está chamando o método 'ship!' do 'line_item' qdo o pagamento é atualizado
+  it "call :line_item #ship! when receives :payment_accepted status" do
+    order = create(:order)
+    line_item = create(:line_item, order: order)      
+    allow(order).to receive(:line_items).and_return([line_item])
+    #espera que o 'line_item' receba chamada de 'ship!'
+    expect(line_item).to receive(:ship!)
+    #qdo o pagamento for aceito
+    order.update!(status: :payment_accepted)
+  end
+
+  #verifica que não é qualquer update que dispara a chamada de 'ship!'
+  it "does not call :line_item #ship! when receives any other update" do
+    order = create(:order, status: :payment_accepted)
+    line_item = create(:line_item, order: order)
+    #é usado para "permitir" (mock) que a chamada ao método 'line_items' em order
+    #retorne uma lista contendo 'line_item' 
+    allow(order).to receive(:line_items).and_return([line_item])
+    expect(line_item).to_not receive(:ship!)
+    order.update!(subtotal: 30)
+  end
+
   context "when :payment_type is :credit_card and is on :create process" do
     it "validates :card_hash presence" do
       subject = build(:order, payment_type: :credit_card, card_hash: nil)
@@ -68,5 +90,5 @@ RSpec.describe Order, type: :model do
       expect(subject.errors).to have_key(:address)
     end
   end
-  
+
 end

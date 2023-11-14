@@ -35,6 +35,9 @@ class Order < ApplicationRecord
   #chama o método antes da validação apenas durante a criação
   before_validation :set_default_status, on: :create
 
+  #chama o 'ship_order' no momento correto, durante a atualização
+  around_update :ship_order, if: -> { self.status_changed?(to: 'payment_accepted') }
+
   #método da data de vencimento
   def due_date
     self.created_at + DAYS_TO_DUE.days
@@ -44,5 +47,13 @@ class Order < ApplicationRecord
 
   def set_default_status
     self.status = :processing_order
+  end
+
+  #chama esse método qdo a 'order' mudar de status
+  def ship_order
+    #serve para sinalizar em que momento do 'around_update' queremos processar a atualização
+    yield
+    #dispara o método 'ship!' em cada 'line_item' no pedido
+    self.line_items.each { |line_item| line_item.ship! }
   end
 end

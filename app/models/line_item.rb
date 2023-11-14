@@ -15,6 +15,12 @@ class LineItem < ApplicationRecord
     self.payed_price * self.quantity
   end
 
+  def ship!
+    #chama o método do 'Game' e passa o 'self' q é o 'line_item' q tem todos os detalhes do pedido
+    self.product.productable.ship!(self)
+    self.update!(status: :preparing)
+  end
+
   private
 
   def set_default_status
