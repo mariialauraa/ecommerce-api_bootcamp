@@ -26,9 +26,18 @@ RSpec.describe Product, type: :model do
   it_has_behavior_of "like searchable concern", :product, :name
   it_behaves_like "paginatable concern", :product
 
-  it "creates as unfeatured by default" do #criando como não destaque
+  #criando como não destaque
+  it "creates as unfeatured by default" do 
     subject.featured = nil
     subject.save(validate: false)
     expect(subject.featured).to be_falsey
+  end
+
+  it "#sells_count returns quantity product was sold" do
+    order = create(:order)
+    order.update(status: :finished)
+    product = create(:product)
+    create_list(:line_item, 2, quantity: 3, product: product, order: order)
+    expect(product.sells_count).to eq 6
   end
 end
