@@ -5,7 +5,9 @@ class Product < ApplicationRecord
   belongs_to :productable, polymorphic: true
   has_many :product_categories, dependent: :destroy
   has_many :categories, through: :product_categories #through = através
+
   has_many :wish_items
+  has_many :line_items
   
   validates :name, presence: true, uniqueness: { case_sensitive: false }
   validates :description, presence: true
