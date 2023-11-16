@@ -17,7 +17,11 @@ Rails.application.routes.draw do
       resources :orders, only: [:index, :show]
       resources :products
       resources :system_requirements
-      resources :users      
+      resources :users 
+      
+      namespace :dashboard do
+        resources :summaries, only: :index
+      end
     end
   end
 
