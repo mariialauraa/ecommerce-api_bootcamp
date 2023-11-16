@@ -91,4 +91,5 @@ RSpec.describe Order, type: :model do
     end
   end
 
+  it_behaves_like "paginatable concern", :order
 end

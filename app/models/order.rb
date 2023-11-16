@@ -1,4 +1,6 @@
 class Order < ApplicationRecord
+  include Paginatable
+
   DAYS_TO_DUE = 7 #constante
 
   #atributos virtuais, não são salvos no Banco de Dados
