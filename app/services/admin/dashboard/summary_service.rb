@@ -21,11 +21,10 @@ module Admin::Dashboard
       #o arel ajuda a pegar os elementos de 'Order' e colocar dentro de 'calculate'
       arel = Order.arel_table
       calc = Order.where(status: :finished, created_at: @min_date..@max_date)
-                  #pluck retorna os dados num array
-                  #flatten deixa apenas um []
+                  #pluck retorna os dados num array e #flatten deixa apenas um []                  
                   .pluck(arel[:id].count, arel[:total_amount].sum).flatten 
       @records[:orders] = calc.first #arel[:id].count
-      @records[:profit] = calc.second #lucro/faturamento
+      @records[:profit] = calc.second #'total_amount'/faturamento
     end
   end
 end
